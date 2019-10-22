@@ -8,15 +8,17 @@
     Prepare the flow.xml to be split in the next step.
     This is easier when using <xsl:result-document>, but the TransformXML processor
     does not allow setting the "http://saxon.sf.net/feature/allow-external-functions"
-    feature of Saxon.
+    feature of Saxon, so <xsl:result-document> cannot be used.
   -->
 
+  <!-- Make a document root that will contain all flow-maps. -->
   <xsl:template match="/">
     <flow-map>
       <xsl:apply-templates select="*" mode="sub-flow"/>
     </flow-map>
   </xsl:template>
 
+  <!-- Create flow-maps for the main flow and sub-flows.  -->
   <xsl:template match="/* | processGroup" mode="sub-flow">
     <xsl:copy>
       <xsl:copy-of select="@*"/>
@@ -27,10 +29,12 @@
     <xsl:apply-templates select="*" mode="sub-flow"/>
   </xsl:template>
 
+  <!-- In sub-flow mode, only look for sub-flows. -->
   <xsl:template match="*" mode="sub-flow" priority="-1">
     <xsl:apply-templates select="*" mode="sub-flow"/>
   </xsl:template>
 
+  <!-- Replace a processGroup with a reference to a flow-map. -->
   <xsl:template match="processGroup">
     <xsl:copy>
       <xsl:attribute name="refid" select="data(id)"/>
@@ -38,6 +42,12 @@
     </xsl:copy>
   </xsl:template>
 
+  <!-- Export all processors in the STOPPED state. -->
+  <xsl:template match="scheduledState[not(*)]">
+    <scheduledState>STOPPED</scheduledState>
+  </xsl:template>
+
+  <!-- Copy everything else. -->
   <xsl:template match="@*|node()" priority="-1">
     <xsl:copy>
       <xsl:apply-templates select="@*|node()"/>
