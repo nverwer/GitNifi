@@ -1,4 +1,4 @@
-If you read this, you probably know what Git is.
+If you read this, you probably know what Git is, and what Nifi is.
 As the name implies, this project uses Git and [Apache Nifi](https://nifi.apache.org/).
 
 # Why? #

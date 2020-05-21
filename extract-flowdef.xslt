@@ -42,8 +42,8 @@
     </xsl:copy>
   </xsl:template>
 
-  <!-- Export all processors in the STOPPED state. -->
-  <xsl:template match="scheduledState[not(*)]">
+  <!-- Export all processors except disabled ones in the STOPPED state. -->
+  <xsl:template match="scheduledState[not(*) and not(. = 'DISABLED')]">
     <scheduledState>STOPPED</scheduledState>
   </xsl:template>
 
